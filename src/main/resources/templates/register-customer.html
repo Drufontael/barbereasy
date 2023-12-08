@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Cadastro de Cliente</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body class="bg-dark text-white">
+        <div class="container">
+            <span>
+                <h2 class="text-center">Cadastre seus dados: </h2>
+            </span>
+            <form class="form" id="customerForm">
+                <div class="form-group">
+                    <label for="username">Nome</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu nome" required>
+                </div>
+                
+        
+                <div class="form-group">
+                    <label for="email">Endereço de email</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Seu email" required>
+                    <small id="emailHelp" class="form-text text-muted text-white">Nunca vamos compartilhar seu email, com ninguém.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Senha com no mínimo 8 caracteres" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerInfo">Digite seus estilos de corte preferidos:</label>
+                    <textarea class="form-control" id="customerInfo" name="customerInfo" required></textarea>
+                </div>
+        
+                
+        
+                
+        
+                <button class="btn btn-outline-light" type="button" onclick="cadastrarCliente()">Cadastrar</button>
+            </form>
+        </div>
+       
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script>
+            function cadastrarCliente() {
+                var customerData = {
+                    username: $("#username").val(),
+                    email: $("#email").val(),
+                    password: $("#password").val(),
+                    customerInfo: $("#customerInfo").val()
+                    
+                };
+                console.log(customerData);
+    
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/customer/save",
+                    data: JSON.stringify(customerData),
+                    success: function (data) {
+                        alert("Cliente cadastrado com sucesso!");
+                    },
+                    error: function (error) {
+                        alert("Erro ao cadastrar cliente: " + error.responseJSON.message);
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Lista de Clientes</title>
+</head>
+<body>
+<h1>Lista de Clientes</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Informações</th>
+    </tr>
+    </thead>
+    <tbody id="customerTableBody"></tbody>
+</table>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
+       integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" 
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script>
+    // Função para fazer uma solicitação fetch para o endpoint do RestController
+    async function fetchData() {
+        try {
+            const response = await fetch('/customer/'); // Substitua pelo seu endpoint
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Erro ao buscar dados:', error);
+            return [];
+        }
+    }
+
+    
+
+    // Função para construir a tabela com base nos dados obtidos do RestController
+    async function buildCustomerTable() {
+        const jsonCustomerList = await fetchData();
+        const tableBody = document.getElementById('customerTableBody');
+
+        // Limpa o conteúdo da tabela
+        tableBody.innerHTML = '';
+
+        // Itera sobre a lista de clientes e adiciona as linhas à tabela
+        jsonCustomerList.forEach(function (customer) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3)
+
+            cell1.innerHTML = customer.id;
+            cell2.innerHTML = customer.username;
+            cell3.innerHTML = customer.email;
+            cell4.innerHTML = customer.customerInfo;
+        });
+    }
+
+    // Chama a função para construir a tabela ao carregar a página
+    buildCustomerTable();
+</script>
+</body>
+</html>

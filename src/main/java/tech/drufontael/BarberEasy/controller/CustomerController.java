@@ -2,6 +2,7 @@ package tech.drufontael.BarberEasy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.model.Customer;
 import tech.drufontael.BarberEasy.service.CustomerService;
@@ -16,9 +17,9 @@ public class CustomerController {
     private CustomerService service;
 
     @PostMapping("/save")
-    public ResponseEntity<Customer> save(@RequestBody Customer obj){
+    public ResponseEntity<String> save(@RequestBody Customer obj){
         service.save(obj);
-        return ResponseEntity.ok(obj);
+        return ResponseEntity.ok("Cliente Cadastrado");
     }
 
     @GetMapping("/")
@@ -32,4 +33,6 @@ public class CustomerController {
         Customer obj=service.findByUsername(username);
         return ResponseEntity.ok(obj);
     }
+
+
 }
