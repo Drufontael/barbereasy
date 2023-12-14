@@ -1,7 +1,7 @@
 package tech.drufontael.BarberEasy.model;
 
 import jakarta.persistence.*;
-import tech.drufontael.BarberEasy.DTO.BarberDTO;
+import tech.drufontael.BarberEasy.dto.BarberDTO;
 
 import java.util.HashSet;
 import java.util.Set;

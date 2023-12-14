@@ -1,4 +1,4 @@
-package tech.drufontael.BarberEasy.DTO;
+package tech.drufontael.BarberEasy.dto;
 
 import tech.drufontael.BarberEasy.model.Barber;
 
