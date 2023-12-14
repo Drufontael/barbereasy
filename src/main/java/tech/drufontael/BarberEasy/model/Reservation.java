@@ -5,7 +5,6 @@ import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "tb_reservation")
@@ -17,13 +16,18 @@ public class Reservation {
     @JoinColumn(name = "id_customer")
     private Customer customer;
     @ManyToOne
-    @JoinColumn(name="id_user")
+    @JoinColumn(name="id_barber")
     private Barber barber;
 
-    @OneToMany
-    private Set<Procedure> procedures=new HashSet<>();
-
+    @ManyToMany
+    @JoinTable(
+            name = "tb_reservation_procedures",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "procedure_id")
+    )
+    private Set<Procedure> procedures = new HashSet<>();
     private LocalDateTime dateTime;
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     public Reservation() {

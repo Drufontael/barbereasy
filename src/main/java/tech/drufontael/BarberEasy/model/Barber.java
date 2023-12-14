@@ -1,8 +1,6 @@
 package tech.drufontael.BarberEasy.model;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +9,15 @@ import java.util.Set;
 @DiscriminatorValue("barber")
 public class Barber extends User{
     private String barberInfo;
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name ="barber_procedures",
+            joinColumns = @JoinColumn(name = "barber_id"),
+            inverseJoinColumns = @JoinColumn(name = "procedure_id")
+    )
     private Set<Procedure> procedures=new HashSet<>();
-    @OneToMany
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "barber_availability", joinColumns = @JoinColumn(name = "barber_id"))
     private Set<Availability> availabilities=new HashSet<>();
 
     public Barber() {
@@ -38,5 +42,22 @@ public class Barber extends User{
 
     public void setProcedures(Set<Procedure> procedures) {
         this.procedures = procedures;
+    }
+
+    public Set<Availability> getAvailabilities() {
+        return availabilities;
+    }
+
+    public void setAvailabilities(Set<Availability> availabilities) {
+        this.availabilities = availabilities;
+    }
+
+    @Override
+    public String toString() {
+        return "Barber{" +
+                "barberInfo='" + barberInfo + '\'' +
+                ", procedures=" + procedures +
+                ", availabilities=" + availabilities +
+                '}';
     }
 }

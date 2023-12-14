@@ -2,6 +2,8 @@ package tech.drufontael.BarberEasy.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity(name = "tb_user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type",discriminatorType = DiscriminatorType.STRING)
@@ -53,5 +55,23 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.id)) return false;
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
     }
 }

@@ -6,4 +6,5 @@ public enum ReservationStatus {
     PENDING,
     COMPLETED,
     FREE
+
 }

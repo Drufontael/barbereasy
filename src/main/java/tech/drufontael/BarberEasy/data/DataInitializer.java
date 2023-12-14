@@ -1,10 +1,12 @@
 package tech.drufontael.BarberEasy.data;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tech.drufontael.BarberEasy.model.*;
 import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 import tech.drufontael.BarberEasy.repository.*;
+import tech.drufontael.BarberEasy.service.BarberService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -20,10 +22,14 @@ public class DataInitializer implements CommandLineRunner {
     private BarberRepository barberRepository;
 
     @Autowired
+    private BarberService barberService;
+
+    @Autowired
     private ManagerRepository managerRepository;
 
     @Autowired
     private ProcedureRepository procedureRepository;
+
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -32,13 +38,15 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Criar e salvar 5 barbeiros
         for (int i = 1; i <= 5; i++) {
-            Barber barber = new Barber(null, "Barbeiro Criativo " + i, "barbeiro" + i + "@hairstudio.com", "senha" + i, "Expert em cortes modernos e estilos únicos.");
+            Barber barber = new Barber(null, "Barbeiro Criativo " + i, "barbeiro" + i + "@hairstudio.com",
+                    "senha" + i, "Expert em cortes modernos e estilos únicos.");
             barberRepository.save(barber);
         }
 
         // Criar e salvar 10 clientes
         for (int i = 1; i <= 10; i++) {
-            Customer customer = new Customer(null, "Cliente Estiloso " + i, "cliente" + i + "@mail.com", "senha" + i,"Carcteristica"+i);
+            Customer customer = new Customer(null, "Cliente Estiloso " + i, "cliente" + i + "@mail.com",
+                    "senha" + i,"Carcteristica"+i);
             userRepository.save(customer);
         }
 
@@ -56,10 +64,34 @@ public class DataInitializer implements CommandLineRunner {
         List<Barber> barbeiros = barberRepository.findAll();
         List<Procedure> procedimentos = procedureRepository.findAll();
 
-        Reservation r1=new Reservation(null,clientes.get(1),barbeiros.get(3), LocalDateTime.of(2023,12,20,12,00), ReservationStatus.PENDING);
-        Reservation r2=new Reservation(null,clientes.get(3),barbeiros.get(2), LocalDateTime.of(2023,12,15,9,00), ReservationStatus.PENDING);
-        Reservation r3=new Reservation(null,clientes.get(8),barbeiros.get(1), LocalDateTime.of(2023,12,10,22,00), ReservationStatus.PENDING);
-        Reservation r4=new Reservation(null,clientes.get(6),barbeiros.get(3), LocalDateTime.of(2023,12,25,12,00), ReservationStatus.PENDING);
+        for (Barber barber:barbeiros){
+            barberService.AvailabilityWeekInitializer(barber.getId());
+            System.out.println(barber);
+        }
+
+        barbeiros.get(1).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(4)));
+        barbeiros.get(0).getProcedures().addAll(Arrays.asList(procedimentos.get(0),procedimentos.get(3),procedimentos.get(4)));
+        barbeiros.get(2).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(2),procedimentos.get(4)));
+        barbeiros.get(3).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(2)));
+        barbeiros.get(4).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(0)));
+
+        barberRepository.saveAll(barbeiros);
+
+
+        Reservation r1=new Reservation(null,clientes.get(1),barbeiros.get(3),
+                LocalDateTime.of(2023,12,20,12,00),
+                ReservationStatus.PENDING);
+        Reservation r2=new Reservation(null,clientes.get(3),barbeiros.get(2),
+                LocalDateTime.of(2023,12,15,9,00),
+                ReservationStatus.PENDING);
+        Reservation r3=new Reservation(null,clientes.get(8),barbeiros.get(1),
+                LocalDateTime.of(2023,12,10,22,00),
+                ReservationStatus.PENDING);
+        Reservation r4=new Reservation(null,clientes.get(6),barbeiros.get(3),
+                LocalDateTime.of(2023,12,25,12,00),
+                ReservationStatus.PENDING);
+
+
 
         r1.getProcedures().addAll(Arrays.asList(procedimentos.get(2),procedimentos.get(4)));
         r2.getProcedures().addAll(Arrays.asList(procedimentos.get(0),procedimentos.get(2)));
