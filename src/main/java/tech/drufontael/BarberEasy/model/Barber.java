@@ -1,6 +1,7 @@
 package tech.drufontael.BarberEasy.model;
 
 import jakarta.persistence.*;
+import tech.drufontael.BarberEasy.DTO.BarberDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -59,5 +60,9 @@ public class Barber extends User{
                 ", procedures=" + procedures +
                 ", availabilities=" + availabilities +
                 '}';
+    }
+
+    public BarberDTO toDTO(){
+        return new BarberDTO(this.getId(),this.getUsername(),this.getEmail(),this.getPassword(),this.getBarberInfo());
     }
 }

@@ -9,6 +9,7 @@ import tech.drufontael.BarberEasy.repository.*;
 import tech.drufontael.BarberEasy.service.BarberService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
     public void run(String... args) throws Exception {
@@ -68,6 +71,10 @@ public class DataInitializer implements CommandLineRunner {
             barberService.AvailabilityWeekInitializer(barber.getId());
             System.out.println(barber);
         }
+
+        LocalDateTime start=LocalDateTime.parse("18/12/2023 14:15",formatter);
+        LocalDateTime end=LocalDateTime.parse("18/12/2023 15:00",formatter);
+        System.out.println(barberService.AvailabilityReservation(1L,start,end));
 
         barbeiros.get(1).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(4)));
         barbeiros.get(0).getProcedures().addAll(Arrays.asList(procedimentos.get(0),procedimentos.get(3),procedimentos.get(4)));
