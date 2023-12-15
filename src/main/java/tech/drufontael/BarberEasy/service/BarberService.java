@@ -2,6 +2,7 @@ package tech.drufontael.BarberEasy.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.drufontael.BarberEasy.DTO.BarberDTO;
 import tech.drufontael.BarberEasy.model.Availability;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
