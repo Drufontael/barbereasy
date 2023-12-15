@@ -86,16 +86,16 @@ public class DataInitializer implements CommandLineRunner {
 
 
         Reservation r1=new Reservation(null,clientes.get(1),barbeiros.get(3),
-                LocalDateTime.of(2023,12,20,12,00),
+                LocalDateTime.of(2023,12,20,12, 0),
                 ReservationStatus.PENDING);
         Reservation r2=new Reservation(null,clientes.get(3),barbeiros.get(2),
-                LocalDateTime.of(2023,12,15,9,00),
+                LocalDateTime.of(2023,12,15,9, 0),
                 ReservationStatus.PENDING);
         Reservation r3=new Reservation(null,clientes.get(8),barbeiros.get(1),
-                LocalDateTime.of(2023,12,10,22,00),
+                LocalDateTime.of(2023,12,10,22, 0),
                 ReservationStatus.PENDING);
         Reservation r4=new Reservation(null,clientes.get(6),barbeiros.get(3),
-                LocalDateTime.of(2023,12,25,12,00),
+                LocalDateTime.of(2023,12,25,12, 0),
                 ReservationStatus.PENDING);
 
 

@@ -3,7 +3,7 @@ package tech.drufontael.BarberEasy.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.drufontael.BarberEasy.DTO.BarberDTO;
+import tech.drufontael.BarberEasy.dto.BarberDTO;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.service.BarberService;
 
