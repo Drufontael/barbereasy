@@ -88,4 +88,9 @@ public class Reservation {
     public void setStatus(ReservationStatus status) {
         this.status = status;
     }
+
+    public Integer getDuration(){
+        Integer duration=this.procedures.stream().map(Procedure::getDurationMinutes).reduce((a,b)->a+b).orElse(null);
+        return duration;
+    }
 }

@@ -7,6 +7,7 @@ import tech.drufontael.BarberEasy.model.*;
 import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 import tech.drufontael.BarberEasy.repository.*;
 import tech.drufontael.BarberEasy.service.BarberService;
+import tech.drufontael.BarberEasy.service.ReservationService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ProcedureRepository procedureRepository;
+    @Autowired
+    private ReservationService reservationService;
 
 
     @Autowired
@@ -74,7 +77,7 @@ public class DataInitializer implements CommandLineRunner {
 
         LocalDateTime start=LocalDateTime.parse("18/12/2023 14:15",formatter);
         LocalDateTime end=LocalDateTime.parse("18/12/2023 15:00",formatter);
-        System.out.println(barberService.AvailabilityReservation(1L,start,end));
+        System.out.println(reservationService.AvailabilityReservation(1L,start,end));
 
         barbeiros.get(1).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(4)));
         barbeiros.get(0).getProcedures().addAll(Arrays.asList(procedimentos.get(0),procedimentos.get(3),procedimentos.get(4)));

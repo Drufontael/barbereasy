@@ -69,34 +69,7 @@ public class BarberService {
         repository.save(barber);
     }
 
-    public Boolean AvailabilityReservation(Long id,LocalDateTime start,LocalDateTime end){
-        Barber obj=repository.findById(id).orElseThrow();
-        Set<Availability> availabilities= obj.getAvailabilities();
-        Availability first=availabilities.stream()
-                .filter(x->(x.getStartTime().equals(start)||x.getStartTime().isBefore(start))
-                &&(x.getEndTime().isAfter(start))).findFirst().orElseThrow();
-        Availability last=availabilities.stream()
-                .filter(x->(x.getStartTime().isBefore(end)||x.getStartTime().equals(end))
-                        &&(x.getEndTime().isAfter(end)||x.getEndTime().equals(end))).findFirst().orElseThrow();
-        List<Availability> reserveComplete= availabilities.stream()
-                .filter(x->x.getStartTime().equals(first.getStartTime()) || (x.getStartTime().isAfter(first.getStartTime()))
-                && (x.getEndTime().equals(last.getEndTime()) || x.getEndTime().isBefore(last.getEndTime())))
-                .toList();
-        LocalDateTime initTime=first.getStartTime();
-        LocalDateTime finalTime=last.getEndTime();
-        for (Availability a:reserveComplete){
-            if(a.getStatus()!=ReservationStatus.FREE) return false;
-        }
-        for (Availability a:reserveComplete){
-            availabilities.remove(a);
-        }
-        Availability before=new Availability(initTime,start.minusMinutes(1),ReservationStatus.FREE);
-        Availability newAvailability = new Availability(start,end.minusMinutes(1),ReservationStatus.PENDING);
-        Availability after=new Availability(end,finalTime,ReservationStatus.FREE);
-        availabilities.addAll(Arrays.asList(before,newAvailability,after));
-        repository.save(obj);
-        return true;
-    }
+
 
 
 }
