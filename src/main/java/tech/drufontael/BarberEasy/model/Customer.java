@@ -2,11 +2,17 @@ package tech.drufontael.BarberEasy.model;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("customer")
 public class Customer extends User{
     private String customerInfo;
+    @OneToMany(mappedBy = "customer")
+    private Set<Reservation> reservations=new HashSet<>();
 
     public Customer() {
     }

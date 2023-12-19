@@ -1,6 +1,7 @@
 package tech.drufontael.BarberEasy.model;
 
 import jakarta.persistence.*;
+import tech.drufontael.BarberEasy.util.Util;
 
 import java.util.Objects;
 
@@ -21,7 +22,11 @@ public abstract class User {
     public User(Long id, String name, String email, String password) {
         this.id = id;
         this.username = name;
-        this.email = email;
+        if(Util.emailValidator(email)) {
+            this.email = email;
+        }else {
+            throw new IllegalArgumentException("Invalid email");
+        }
         this.password = password;
     }
 

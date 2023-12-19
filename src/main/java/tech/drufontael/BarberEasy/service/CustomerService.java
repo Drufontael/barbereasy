@@ -26,4 +26,7 @@ public class CustomerService {
                 new UserException("Customer not found"));
     }
 
+    public Customer findById(Long idCustomer) {
+        return repository.findById(idCustomer).orElseThrow(()->new UserException("Customer not found!") );
+    }
 }

@@ -1,5 +1,6 @@
 package tech.drufontael.BarberEasy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import tech.drufontael.BarberEasy.dto.BarberDTO;
 
@@ -17,9 +18,9 @@ public class Barber extends User{
             inverseJoinColumns = @JoinColumn(name = "procedure_id")
     )
     private Set<Procedure> procedures=new HashSet<>();
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "barber_availability", joinColumns = @JoinColumn(name = "barber_id"))
-    private Set<Availability> availabilities=new HashSet<>();
+    @OneToMany(mappedBy = "barber", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Reservation> reservations =new HashSet<>();
 
     public Barber() {
     }
@@ -45,12 +46,12 @@ public class Barber extends User{
         this.procedures = procedures;
     }
 
-    public Set<Availability> getAvailabilities() {
-        return availabilities;
+    public Set<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setAvailabilities(Set<Availability> availabilities) {
-        this.availabilities = availabilities;
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class Barber extends User{
         return "Barber{" +
                 "barberInfo='" + barberInfo + '\'' +
                 ", procedures=" + procedures +
-                ", availabilities=" + availabilities +
+                ", availabilities=" + reservations +
                 '}';
     }
 

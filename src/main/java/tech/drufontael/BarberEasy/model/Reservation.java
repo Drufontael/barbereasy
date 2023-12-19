@@ -16,28 +16,30 @@ public class Reservation {
     @JoinColumn(name = "id_customer")
     private Customer customer;
     @ManyToOne
-    @JoinColumn(name="id_barber")
+    @JoinColumn(name = "id_barber")
     private Barber barber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_reservation_procedures",
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "procedure_id")
     )
     private Set<Procedure> procedures = new HashSet<>();
-    private LocalDateTime dateTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endtime;
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, Customer customer, Barber barber, LocalDateTime dateTime, ReservationStatus status) {
+    public Reservation(Long id, Customer customer, Barber barber, LocalDateTime startTime, ReservationStatus status) {
         this.id = id;
         this.customer = customer;
         this.barber = barber;
-        this.dateTime = dateTime;
+        this.startTime = startTime;
+        this.endtime = endtime;
         this.status = status;
     }
 
@@ -73,12 +75,24 @@ public class Reservation {
         this.procedures = procedures;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime() {
+        if(getDuration()!=null){
+            this.endtime = startTime.plusMinutes(getDuration() - 1);
+        } else {
+            endtime=startTime.plusMinutes(30);
+        }
     }
 
     public ReservationStatus getStatus() {

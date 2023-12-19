@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 import tech.drufontael.BarberEasy.model.*;
 import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 import tech.drufontael.BarberEasy.repository.*;
-import tech.drufontael.BarberEasy.service.BarberService;
-import tech.drufontael.BarberEasy.service.ReservationService;
+import tech.drufontael.BarberEasy.service.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,25 +17,16 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private CustomerRepository userRepository;
-
-    @Autowired
-    private BarberRepository barberRepository;
-
-    @Autowired
     private BarberService barberService;
-
     @Autowired
-    private ManagerRepository managerRepository;
-
+    private CustomerService customerService;
     @Autowired
-    private ProcedureRepository procedureRepository;
+    private ManagerService managerService;
+    @Autowired
+    private ProcedureService procedureService;
     @Autowired
     private ReservationService reservationService;
 
-
-    @Autowired
-    private ReservationRepository reservationRepository;
 
     DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -46,38 +36,33 @@ public class DataInitializer implements CommandLineRunner {
         for (int i = 1; i <= 5; i++) {
             Barber barber = new Barber(null, "Barbeiro Criativo " + i, "barbeiro" + i + "@hairstudio.com",
                     "senha" + i, "Expert em cortes modernos e estilos únicos.");
-            barberRepository.save(barber);
+            barberService.save(barber);
         }
 
         // Criar e salvar 10 clientes
         for (int i = 1; i <= 10; i++) {
             Customer customer = new Customer(null, "Cliente Estiloso " + i, "cliente" + i + "@mail.com",
                     "senha" + i,"Carcteristica"+i);
-            userRepository.save(customer);
+            customerService.save(customer);
         }
 
         // Criar e salvar 1 gerente
         Manager manager = new Manager(null, "Gerente Fashion", "gerente@hairstudio.com", "senha");
-        managerRepository.save(manager);
+        managerService.save(manager);
 
         // Criar e salvar 5 procedimentos
         for(int i=1; i<=5; i++){
             Procedure procedure=new Procedure(null,"Corte estilo "+i,i%2==0?"Lindo"+i:"Barbaro"+i,i*10);
-            procedureRepository.save(procedure);
+            procedureService.save(procedure);
         }
 
-        List<Customer> clientes = userRepository.findAll();
-        List<Barber> barbeiros = barberRepository.findAll();
-        List<Procedure> procedimentos = procedureRepository.findAll();
+        List<Customer> clientes = customerService.findAll();
+        List<Barber> barbeiros = barberService.findAll();
+        List<Procedure> procedimentos = procedureService.findAll();
 
-        for (Barber barber:barbeiros){
-            barberService.AvailabilityWeekInitializer(barber.getId());
-            System.out.println(barber);
-        }
 
-        LocalDateTime start=LocalDateTime.parse("20/12/2023 14:15",formatter);
-        LocalDateTime end=LocalDateTime.parse("20/12/2023 15:00",formatter);
-        System.out.println(reservationService.AvailabilityReservation(1L,start,end));
+
+
 
         barbeiros.get(1).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(4)));
         barbeiros.get(0).getProcedures().addAll(Arrays.asList(procedimentos.get(0),procedimentos.get(3),procedimentos.get(4)));
@@ -85,20 +70,20 @@ public class DataInitializer implements CommandLineRunner {
         barbeiros.get(3).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(2)));
         barbeiros.get(4).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(0)));
 
-        barberRepository.saveAll(barbeiros);
+        barberService.saveAll(barbeiros);
 
 
         Reservation r1=new Reservation(null,clientes.get(1),barbeiros.get(3),
-                LocalDateTime.of(2023,12,20,12, 0),
+                LocalDateTime.parse("25/12/2023 14:30",formatter),
                 ReservationStatus.PENDING);
         Reservation r2=new Reservation(null,clientes.get(3),barbeiros.get(2),
-                LocalDateTime.of(2023,12,15,9, 0),
+                LocalDateTime.parse("25/12/2023 16:30",formatter),
                 ReservationStatus.PENDING);
         Reservation r3=new Reservation(null,clientes.get(8),barbeiros.get(1),
-                LocalDateTime.of(2023,12,10,22, 0),
+                LocalDateTime.parse("25/12/2023 11:30",formatter),
                 ReservationStatus.PENDING);
         Reservation r4=new Reservation(null,clientes.get(6),barbeiros.get(3),
-                LocalDateTime.of(2023,12,25,12, 0),
+                LocalDateTime.parse("25/12/2023 14:30",formatter),
                 ReservationStatus.PENDING);
 
 
@@ -108,7 +93,7 @@ public class DataInitializer implements CommandLineRunner {
         r3.getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(2)));
         r4.getProcedures().addAll(Arrays.asList(procedimentos.get(3),procedimentos.get(2)));
 
-        reservationRepository.saveAll(Arrays.asList(r1,r2,r3,r4));
+        reservationService.saveAll(Arrays.asList(r1,r2,r3,r4));
 
     }
 }

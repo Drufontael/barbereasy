@@ -2,30 +2,34 @@ package tech.drufontael.BarberEasy.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.drufontael.BarberEasy.model.Availability;
-import tech.drufontael.BarberEasy.model.Barber;
-import tech.drufontael.BarberEasy.model.Reservation;
-import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
-import tech.drufontael.BarberEasy.repository.BarberRepository;
-import tech.drufontael.BarberEasy.repository.ReservationRepository;
-import tech.drufontael.BarberEasy.service.exception.UserException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import tech.drufontael.BarberEasy.model.Barber;
+import tech.drufontael.BarberEasy.model.Customer;
+import tech.drufontael.BarberEasy.model.Procedure;
+import tech.drufontael.BarberEasy.model.Reservation;
+import tech.drufontael.BarberEasy.repository.ReservationRepository;
+import tech.drufontael.BarberEasy.service.exception.ReservationException;
+import tech.drufontael.BarberEasy.util.Util;
+import tech.drufontael.BarberEasy.dto.ReservationDTO;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ReservationService {
 
     @Autowired
     private  ReservationRepository repository;
+
     @Autowired
-    private BarberRepository barberRepository;
+    private CustomerService customerService;
+    @Autowired
+    private BarberService barberService;
+    @Autowired
+    private ProcedureService procedureService;
 
     public void save(Reservation obj){
+        obj.setEndtime();
         repository.save(obj);
     }
 
@@ -33,44 +37,59 @@ public class ReservationService {
         return repository.findAll();
     }
 
-    public Boolean AvailabilityReservation(Long id, LocalDateTime start, LocalDateTime end){
-        Barber obj=barberRepository.findById(id).orElseThrow(()->new UserException("Barber not found"));
-        Set<Availability> availabilities= obj.getAvailabilities();
-        Availability first=availabilities.stream()
-                .filter(x->(x.getStartTime().equals(start)||x.getStartTime().isBefore(start))
-                        &&(x.getEndTime().isAfter(start))).findFirst().orElseThrow();
-        Availability last=availabilities.stream()
-                .filter(x->(x.getStartTime().isBefore(end)||x.getStartTime().equals(end))
-                        &&(x.getEndTime().isAfter(end)||x.getEndTime().equals(end))).findFirst().orElseThrow();
-        List<Availability> reserveComplete= availabilities.stream()
-                .filter(x->x.getStartTime().equals(first.getStartTime()) || (x.getStartTime().isAfter(first.getStartTime()))
-                        && (x.getEndTime().equals(last.getEndTime()) || x.getEndTime().isBefore(last.getEndTime())))
-                .toList();
-        LocalDateTime initTime=first.getStartTime();
-        LocalDateTime finalTime=last.getEndTime();
-        for (Availability a:reserveComplete){
-            if(a.getStatus()!= ReservationStatus.FREE) return false;
+
+    public void saveAll(List<Reservation> list) {
+        for (Reservation r:list){
+            r.setEndtime();
         }
-        for (Availability a:reserveComplete){
-            availabilities.remove(a);
+        repository.saveAll(list);
+    }
+
+    public List<Reservation> findByBarberId(Long id){
+        return repository.findByBarberId(id);
+    }
+
+    public List<Reservation> findByCustomerId(Long id){
+        return repository.findByCustomerId(id);
+    }
+
+    public Reservation fromDTO(ReservationDTO obj){
+
+        Customer customer = customerService.findById(obj.getIdCustomer());
+        Barber barber = barberService.findById(obj.getIdBarber());
+        List<Procedure> procedures = new ArrayList<>();
+        for (Long id : obj.getProceduresId()) {
+            Procedure procedure = procedureService.findById(id);
+            if (barber.getProcedures().contains(procedure)) {
+                procedures.add(procedure);
+            } else {
+                throw new ReservationException("Barber does not perform this procedure");
+            }
         }
-        Availability before=new Availability(initTime,start.minusMinutes(1),ReservationStatus.FREE);
-        Availability newAvailability = new Availability(start,end.minusMinutes(1),ReservationStatus.PENDING);
-        Availability after=new Availability(end,finalTime,ReservationStatus.FREE);
-        availabilities.addAll(Arrays.asList(before,newAvailability,after));
-        barberRepository.save(obj);
+        Reservation reservation = new Reservation(obj.getId(), customer, barber, obj.getStartTime(), obj.getStatus());
+        reservation.getProcedures().addAll(procedures);
+        reservation.setEndtime();
+        return reservation;
+    }
+    public ReservationDTO toDTO(Reservation source){
+        List<Long> idProcedures=source.getProcedures().stream().map(x->x.getId()).toList();
+        return new ReservationDTO(source.getId(),source.getCustomer().getId(),source.getBarber().getId(),source.getStartTime(),source.getStatus()
+        ,idProcedures);
+    }
+
+    public Reservation update(Long id, ReservationDTO source){
+        Reservation reservation=repository.findById(id).orElseThrow(()->new ReservationException("Reservation not found"));
+        ReservationDTO target=this.toDTO(reservation);
+        Util.copyNonNullProperties(source,target);
+        reservation=this.fromDTO(target);
+        repository.save(reservation);
+        return reservation;
+    }
+
+    public boolean delete(Long id){
+        if(!repository.findById(id).isPresent()) return false;
+        Reservation reservation=repository.findById(id).get();
+        repository.delete(reservation);
         return true;
     }
-
-    public List<Availability> dayAvailability(LocalDate date){
-        List<Barber> barbers=barberRepository.findAll();
-        List<Availability> availabilities=new ArrayList<>();
-        for (Barber b:barbers){
-            List<Availability> addList=b.getAvailabilities().stream().filter(x->x.getStartTime().isAfter(date.atStartOfDay())
-            && x.getEndTime().isBefore(date.plusDays(1).atStartOfDay())).toList();
-            availabilities.addAll(addList);
-        }
-        return availabilities;
-    }
-
 }
