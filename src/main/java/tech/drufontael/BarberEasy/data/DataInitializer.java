@@ -75,8 +75,8 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println(barber);
         }
 
-        LocalDateTime start=LocalDateTime.parse("18/12/2023 14:15",formatter);
-        LocalDateTime end=LocalDateTime.parse("18/12/2023 15:00",formatter);
+        LocalDateTime start=LocalDateTime.parse("20/12/2023 14:15",formatter);
+        LocalDateTime end=LocalDateTime.parse("20/12/2023 15:00",formatter);
         System.out.println(reservationService.AvailabilityReservation(1L,start,end));
 
         barbeiros.get(1).getProcedures().addAll(Arrays.asList(procedimentos.get(1),procedimentos.get(3),procedimentos.get(4)));

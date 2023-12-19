@@ -10,7 +10,9 @@ import tech.drufontael.BarberEasy.repository.BarberRepository;
 import tech.drufontael.BarberEasy.repository.ReservationRepository;
 import tech.drufontael.BarberEasy.service.exception.UserException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +60,17 @@ public class ReservationService {
         availabilities.addAll(Arrays.asList(before,newAvailability,after));
         barberRepository.save(obj);
         return true;
+    }
+
+    public List<Availability> dayAvailability(LocalDate date){
+        List<Barber> barbers=barberRepository.findAll();
+        List<Availability> availabilities=new ArrayList<>();
+        for (Barber b:barbers){
+            List<Availability> addList=b.getAvailabilities().stream().filter(x->x.getStartTime().isAfter(date.atStartOfDay())
+            && x.getEndTime().isBefore(date.plusDays(1).atStartOfDay())).toList();
+            availabilities.addAll(addList);
+        }
+        return availabilities;
     }
 
 }

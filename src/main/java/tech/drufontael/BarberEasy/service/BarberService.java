@@ -65,7 +65,8 @@ public class BarberService {
             inicialDate=inicialDate.plusDays(1);
         }
         barber.getAvailabilities().addAll(schedule);
-        System.out.println(barber);
+        System.out.println(barber.getAvailabilities());
+
         repository.save(barber);
     }
 
