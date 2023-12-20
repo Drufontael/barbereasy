@@ -72,7 +72,7 @@ public class ReservationService {
         return reservation;
     }
     public ReservationDTO toDTO(Reservation source){
-        List<Long> idProcedures=source.getProcedures().stream().map(x->x.getId()).toList();
+        List<Long> idProcedures=source.getProcedures().stream().map(Procedure::getId).toList();
         return new ReservationDTO(source.getId(),source.getCustomer().getId(),source.getBarber().getId(),source.getStartTime(),source.getStatus()
         ,idProcedures);
     }

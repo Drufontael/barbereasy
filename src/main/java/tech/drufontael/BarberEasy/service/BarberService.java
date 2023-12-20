@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.drufontael.BarberEasy.dto.BarberDTO;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.model.Procedure;
-import tech.drufontael.BarberEasy.model.Reservation;
-import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 import tech.drufontael.BarberEasy.repository.BarberRepository;
-import tech.drufontael.BarberEasy.repository.ProcedureRepository;
 import tech.drufontael.BarberEasy.service.exception.UserException;
 import tech.drufontael.BarberEasy.util.Util;
 
@@ -88,12 +85,11 @@ public class BarberService {
     }
 
     @Transactional
-    public Boolean delete(Long id){
+    public void delete(Long id){
         Barber barber=findById(id);
         barber.getProcedures().clear();
         repository.save(barber);
         repository.delete(barber);
-        return true;
     }
 
 

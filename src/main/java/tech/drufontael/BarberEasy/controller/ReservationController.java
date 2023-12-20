@@ -1,22 +1,13 @@
 package tech.drufontael.BarberEasy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.dto.ReservationDTO;
-import tech.drufontael.BarberEasy.model.Barber;
-import tech.drufontael.BarberEasy.model.Customer;
-import tech.drufontael.BarberEasy.model.Procedure;
 import tech.drufontael.BarberEasy.model.Reservation;
-import tech.drufontael.BarberEasy.service.BarberService;
-import tech.drufontael.BarberEasy.service.CustomerService;
-import tech.drufontael.BarberEasy.service.ProcedureService;
 import tech.drufontael.BarberEasy.service.ReservationService;
-import tech.drufontael.BarberEasy.service.exception.ReservationException;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

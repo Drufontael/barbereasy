@@ -39,7 +39,6 @@ public class Reservation {
         this.customer = customer;
         this.barber = barber;
         this.startTime = startTime;
-        this.endtime = endtime;
         this.status = status;
     }
 
@@ -104,7 +103,6 @@ public class Reservation {
     }
 
     public Integer getDuration(){
-        Integer duration=this.procedures.stream().map(Procedure::getDurationMinutes).reduce((a,b)->a+b).orElse(null);
-        return duration;
+        return this.procedures.stream().map(Procedure::getDurationMinutes).reduce((a, b)->a+b).orElse(null);
     }
 }

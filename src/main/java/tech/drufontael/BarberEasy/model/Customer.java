@@ -12,7 +12,7 @@ import java.util.Set;
 public class Customer extends User{
     private String customerInfo;
     @OneToMany(mappedBy = "customer")
-    private Set<Reservation> reservations=new HashSet<>();
+    private final Set<Reservation> reservations=new HashSet<>();
 
     public Customer() {
     }

@@ -5,7 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tech.drufontael.BarberEasy.model.*;
 import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
-import tech.drufontael.BarberEasy.repository.*;
 import tech.drufontael.BarberEasy.service.*;
 
 import java.time.LocalDateTime;
@@ -28,10 +27,10 @@ public class DataInitializer implements CommandLineRunner {
     private ReservationService reservationService;
 
 
-    DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    final DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         // Criar e salvar 5 barbeiros
         for (int i = 1; i <= 5; i++) {
             Barber barber = new Barber(null, "Barbeiro Criativo " + i, "barbeiro" + i + "@hairstudio.com",
