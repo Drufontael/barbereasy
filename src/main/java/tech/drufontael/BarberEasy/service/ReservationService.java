@@ -92,4 +92,8 @@ public class ReservationService {
         repository.delete(reservation);
         return true;
     }
+
+    public void update(Reservation reservation) {
+        repository.save(reservation);
+    }
 }

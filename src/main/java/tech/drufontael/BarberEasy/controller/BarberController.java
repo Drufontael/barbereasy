@@ -2,11 +2,15 @@ package tech.drufontael.BarberEasy.controller;
 
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.dto.BarberDTO;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.service.BarberService;
+import tech.drufontael.BarberEasy.service.exception.UserException;
+import tech.drufontael.BarberEasy.util.IdListWrapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,9 +27,39 @@ public class BarberController {
 
     @PostMapping("/save")
     public ResponseEntity<BarberDTO> save(@RequestBody BarberDTO obj){
+        return ResponseEntity.status(201).body(service.save(obj.toBarber()).toDTO());
+    }
 
-        service.save(obj.toBarber());
-        return ResponseEntity.ok(obj);
+    @GetMapping("/{id}")
+    public  ResponseEntity<Barber> read(@PathVariable Long id){
+        Barber barber=service.findById(id);
+        return ResponseEntity.ok(barber);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Barber> update(@PathVariable Long id,@RequestBody BarberDTO obj){
+
+        Barber barber=service.update(id,obj);
+        return ResponseEntity.status(201).body(barber);
+    }
+
+    @PutMapping("/procedure/{id}")
+    public ResponseEntity<Barber> addProcedure(@PathVariable Long id,@RequestBody IdListWrapper idListWrapper){
+        List<Long> idProcedures = idListWrapper.getIds();
+        Barber barber=service.addProcedures(id,idProcedures);
+        return ResponseEntity.status(201).body(barber);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        try {
+            service.delete(id);
+            return ResponseEntity.status(204).body("Barbeiro excluido com sucesso!");
+        }catch (DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Barbeiro possui reservas em processamento, não pode ser excluido.");
+        }catch (UserException e){
+            return ResponseEntity.status(404).body("Barbeiro não encontrado, verifique o id.");
+        }
     }
 
     @GetMapping("/")
