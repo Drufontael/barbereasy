@@ -29,7 +29,7 @@ public class ReservationController {
 
     DateTimeFormatter dtf=DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    @PostMapping("/save")
+    @PostMapping("/create")
     public ResponseEntity<Reservation> save(@RequestBody ReservationDTO obj){
 
         Reservation reservation = service.fromDTO(obj);

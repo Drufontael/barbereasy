@@ -25,41 +25,19 @@ public class BarberController {
     @Autowired
     private BarberService service;
 
-    @PostMapping("/save")
+    // C R U D
+
+    //Create
+    @PostMapping("/create")
     public ResponseEntity<BarberDTO> save(@RequestBody BarberDTO obj){
         return ResponseEntity.status(201).body(service.save(obj.toBarber()).toDTO());
     }
 
+    //Read
     @GetMapping("/{id}")
     public  ResponseEntity<Barber> read(@PathVariable Long id){
         Barber barber=service.findById(id);
         return ResponseEntity.ok(barber);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Barber> update(@PathVariable Long id,@RequestBody BarberDTO obj){
-
-        Barber barber=service.update(id,obj);
-        return ResponseEntity.status(201).body(barber);
-    }
-
-    @PutMapping("/procedure/{id}")
-    public ResponseEntity<Barber> addProcedure(@PathVariable Long id,@RequestBody IdListWrapper idListWrapper){
-        List<Long> idProcedures = idListWrapper.getIds();
-        Barber barber=service.addProcedures(id,idProcedures);
-        return ResponseEntity.status(201).body(barber);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
-        try {
-            service.delete(id);
-            return ResponseEntity.status(204).body("Barbeiro excluido com sucesso!");
-        }catch (DataIntegrityViolationException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Barbeiro possui reservas em processamento, não pode ser excluido.");
-        }catch (UserException e){
-            return ResponseEntity.status(404).body("Barbeiro não encontrado, verifique o id.");
-        }
     }
 
     @GetMapping("/")
@@ -79,9 +57,41 @@ public class BarberController {
     }
 
     @GetMapping("/availability/{id}")
-    public ResponseEntity<Map<LocalDateTime,Boolean>> singleBarberAvailability(@PathVariable Long id,@PathParam("name") LocalDate date){
+    public ResponseEntity<Map<LocalDateTime,Boolean>> singleBarberAvailability(@PathVariable Long id,@PathParam("date") LocalDate date){
         Map<LocalDateTime,Boolean> obj=service.singleBarberAvailability(id,date);
         return ResponseEntity.ok(obj);
 
     }
+
+    //Update
+    @PutMapping("/{id}")
+    public ResponseEntity<Barber> update(@PathVariable Long id,@RequestBody BarberDTO obj){
+
+        Barber barber=service.update(id,obj);
+        return ResponseEntity.status(201).body(barber);
+    }
+
+    @PutMapping("/procedure/{id}")
+    public ResponseEntity<Barber> addProcedure(@PathVariable Long id,@RequestBody IdListWrapper idListWrapper){
+        List<Long> idProcedures = idListWrapper.getIds();
+        Barber barber=service.addProcedures(id,idProcedures);
+        return ResponseEntity.status(201).body(barber);
+    }
+
+    //Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        try {
+            service.delete(id);
+            return ResponseEntity.status(204).body("Barbeiro excluido com sucesso!");
+        }catch (DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Barbeiro possui reservas em processamento, não pode ser excluido.");
+        }catch (UserException e){
+            return ResponseEntity.status(404).body("Barbeiro não encontrado, verifique o id.");
+        }
+    }
+
+
+
+
 }

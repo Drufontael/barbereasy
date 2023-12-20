@@ -24,8 +24,7 @@ public class BarberService {
     private BarberRepository repository;
     @Autowired
     private ProcedureService procedureService;
-    @Autowired
-    private ReservationService reservationService;
+
 
 
     public Barber save(Barber obj) {
