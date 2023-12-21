@@ -2,7 +2,6 @@ package tech.drufontael.BarberEasy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import tech.drufontael.BarberEasy.dto.BarberDTO;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,10 +1,8 @@
 package tech.drufontael.BarberEasy.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.drufontael.BarberEasy.dto.BarberDTO;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.model.Procedure;
 import tech.drufontael.BarberEasy.repository.BarberRepository;

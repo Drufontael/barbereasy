@@ -1,7 +1,6 @@
 package tech.drufontael.BarberEasy.controller;
 
 import jakarta.websocket.server.PathParam;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class BarberController {
     // C R U D
 
     //Create
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<Barber> save(@RequestBody BarberDTO obj){
         var barber=new Barber();
         Util.copyNonNullProperties(obj,barber);

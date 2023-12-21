@@ -1,12 +1,8 @@
 package tech.drufontael.BarberEasy.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tech.drufontael.BarberEasy.model.Barber;
-import tech.drufontael.BarberEasy.model.Customer;
-import tech.drufontael.BarberEasy.model.Procedure;
 import tech.drufontael.BarberEasy.model.Reservation;
 import tech.drufontael.BarberEasy.repository.ReservationRepository;
 import tech.drufontael.BarberEasy.service.exception.ReservationException;
@@ -14,7 +10,6 @@ import tech.drufontael.BarberEasy.service.exception.UserException;
 import tech.drufontael.BarberEasy.util.Util;
 import tech.drufontael.BarberEasy.dto.ReservationDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
