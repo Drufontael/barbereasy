@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.dto.CustomerDTO;
 import tech.drufontael.BarberEasy.model.Customer;
 import tech.drufontael.BarberEasy.service.CustomerService;
+import tech.drufontael.BarberEasy.service.exception.ReservationException;
 import tech.drufontael.BarberEasy.service.exception.UserException;
 
 import java.util.List;
@@ -54,11 +55,13 @@ public class CustomerController {
         }
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable UUID id){
-        try{
+        try {
             service.delete(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Customer deleted");
+        }catch (ReservationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (DataIntegrityViolationException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch (UserException e){

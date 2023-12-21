@@ -9,6 +9,5 @@ import java.util.UUID;
 
 public interface BarberRepository extends JpaRepository<Barber, UUID> {
 
-    List<Barber> findAll();
-    Optional<Barber> findByUsername(String username);
+    List<Barber> findByProceduresId(UUID id);
 }

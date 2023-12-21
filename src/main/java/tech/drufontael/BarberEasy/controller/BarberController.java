@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.dto.BarberDTO;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.service.BarberService;
+import tech.drufontael.BarberEasy.service.exception.ReservationException;
 import tech.drufontael.BarberEasy.service.exception.UserException;
 import tech.drufontael.BarberEasy.util.IdListWrapper;
 import tech.drufontael.BarberEasy.util.Util;
@@ -76,14 +77,14 @@ public class BarberController {
 
     //Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable UUID id){
+    public ResponseEntity<Object> delete(@PathVariable UUID id){
         try {
             service.delete(id);
-            return ResponseEntity.status(204).body("Barbeiro excluido com sucesso!");
-        }catch (DataIntegrityViolationException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Barbeiro possui reservas em processamento, não pode ser excluido.");
+            return ResponseEntity.status(204).body("Barber successfully deleted!");
+        }catch (ReservationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch (UserException e){
-            return ResponseEntity.status(404).body("Barbeiro não encontrado, verifique o id.");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 

@@ -54,7 +54,7 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable UUID id){
         try{
             service.delete(id);

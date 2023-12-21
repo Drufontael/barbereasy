@@ -1,8 +1,12 @@
 package tech.drufontael.BarberEasy.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.drufontael.BarberEasy.event.DeleteEntityEvent;
+import tech.drufontael.BarberEasy.event.DeleteEntityObserver;
 import tech.drufontael.BarberEasy.model.Barber;
 import tech.drufontael.BarberEasy.model.Procedure;
 import tech.drufontael.BarberEasy.repository.BarberRepository;
@@ -14,13 +18,18 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class BarberService {
+public class BarberService implements DeleteEntityObserver {
 
     @Autowired
     private BarberRepository repository;
     @Autowired
     private ProcedureService procedureService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
+    public BarberService(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
 
     public Barber save(Barber obj) {
@@ -59,6 +68,10 @@ public class BarberService {
         return availabilityDay;
     }
 
+    public List<Barber> findByProceduresId(UUID id){
+        return repository.findByProceduresId(id);
+    }
+
     public Barber update(UUID id,Barber obj) {
         Barber target=findById(id);
         Util.copyNonNullProperties(obj,target);
@@ -80,6 +93,7 @@ public class BarberService {
 
     @Transactional
     public void delete(UUID id){
+        eventPublisher.publishEvent(new DeleteEntityEvent(id));
         Barber barber=findById(id);
         barber.getProcedures().clear();
         repository.save(barber);
@@ -87,4 +101,14 @@ public class BarberService {
     }
 
 
+    @Override
+    @EventListener
+    public void onDeleteEntity(DeleteEntityEvent event) {
+        UUID wantedId=event.getEntityId();
+        var procedure=procedureService.findById(wantedId);
+        List<Barber> barbers=repository.findByProceduresId(wantedId);
+        for (Barber b:barbers){
+            b.getProcedures().remove(procedure);
+        }
+    }
 }

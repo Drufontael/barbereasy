@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.drufontael.BarberEasy.dto.ReservationDTO;
+import tech.drufontael.BarberEasy.model.Procedure;
 import tech.drufontael.BarberEasy.model.Reservation;
 import tech.drufontael.BarberEasy.service.ReservationService;
 import tech.drufontael.BarberEasy.service.exception.ReservationException;
@@ -51,10 +52,16 @@ public class ReservationController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/procedure/{id}")
+    public ResponseEntity<List<Reservation>> findByProceduresId(@PathVariable UUID id){
+        return ResponseEntity.ok(service.findByProceduresId(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody ReservationDTO sourceDTO){
         var reservation=new Reservation();
         var source=service.fromDTO(sourceDTO);
+        source.getProcedures().addAll(service.findById(id).getProcedures());
         Util.copyNonNullProperties(source,reservation);
         try{
             return ResponseEntity.ok(service.update(id, reservation));
