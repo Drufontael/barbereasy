@@ -6,6 +6,7 @@ import tech.drufontael.BarberEasy.dto.BarberDTO;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @DiscriminatorValue("barber")
@@ -25,9 +26,9 @@ public class Barber extends User{
     public Barber() {
     }
 
-    public Barber(Long id, String name, String email, String password, String baberInfo) {
+    public Barber(UUID id, String name, String email, String password, String barberInfo) {
         super(id, name, email, password);
-        this.barberInfo = baberInfo;
+        this.barberInfo = barberInfo;
     }
 
     public String getBarberInfo() {
@@ -63,7 +64,4 @@ public class Barber extends User{
                 '}';
     }
 
-    public BarberDTO toDTO(){
-        return new BarberDTO(this.getId(),this.getUsername(),this.getEmail(),this.getPassword(),this.getBarberInfo());
-    }
 }

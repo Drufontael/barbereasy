@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @DiscriminatorValue("customer")
@@ -17,8 +18,8 @@ public class Customer extends User{
     public Customer() {
     }
 
-    public Customer(Long id, String name, String email, String password, String customerInfo) {
-        super(id, name, email, password);
+    public Customer(UUID id, String username, String email, String password, String customerInfo) {
+        super(id, username, email, password);
         this.customerInfo = customerInfo;
     }
 

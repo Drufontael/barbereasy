@@ -1,22 +1,23 @@
 package tech.drufontael.BarberEasy.util;
 import java.util.List;
+import java.util.UUID;
 
 public class IdListWrapper {
 
-    private List<Long> ids;
+    private List<UUID> ids;
 
     public IdListWrapper() {
     }
 
-    public IdListWrapper(List<Long> ids) {
+    public IdListWrapper(List<UUID> ids) {
         this.ids = ids;
     }
 
-    public List<Long> getIds() {
+    public List<UUID> getIds() {
         return ids;
     }
 
-    public void setIds(List<Long> ids) {
+    public void setIds(List<UUID> ids) {
         this.ids = ids;
     }
 

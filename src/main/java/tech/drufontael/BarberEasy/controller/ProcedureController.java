@@ -6,26 +6,26 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.drufontael.BarberEasy.dto.CustomerDTO;
-import tech.drufontael.BarberEasy.model.Customer;
-import tech.drufontael.BarberEasy.service.CustomerService;
+import tech.drufontael.BarberEasy.dto.ProcedureDTO;
+import tech.drufontael.BarberEasy.model.Procedure;
+import tech.drufontael.BarberEasy.service.ProcedureService;
 import tech.drufontael.BarberEasy.service.exception.UserException;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/customer")
-public class CustomerController {
+@RequestMapping("/procedure")
+public class ProcedureController {
 
     @Autowired
-    private CustomerService service;
+    private ProcedureService service;
 
     @PostMapping("/")
-    public ResponseEntity<Customer> save(@RequestBody CustomerDTO obj){
-        var customer=new Customer();
-        BeanUtils.copyProperties(obj,customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(customer));
+    public ResponseEntity<Procedure> save(@RequestBody ProcedureDTO obj){
+        var procedure=new Procedure();
+        BeanUtils.copyProperties(obj,procedure);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(procedure));
     }
 
     @GetMapping("/{id}")
@@ -33,22 +33,22 @@ public class CustomerController {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
         }catch (UserException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found with Id: "+id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Procedure not found with Id: "+id);
         }
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Customer>> findAll(){
-        List<Customer> list=service.findAll();
+    public ResponseEntity<List<Procedure>> findAll(){
+        List<Procedure> list=service.findAll();
         return ResponseEntity.ok(list);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody CustomerDTO obj){
-        var customer=new Customer();
-        BeanUtils.copyProperties(obj,customer);
+    public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody ProcedureDTO obj){
+        var procedure=new Procedure();
+        BeanUtils.copyProperties(obj,procedure);
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(service.update(id,customer));
+            return ResponseEntity.status(HttpStatus.OK).body(service.update(id,procedure));
         }catch (UserException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -58,7 +58,7 @@ public class CustomerController {
     public ResponseEntity<Object> delete(@PathVariable UUID id){
         try{
             service.delete(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Customer deleted");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Procedure deleted");
         }catch (DataIntegrityViolationException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }catch (UserException e){

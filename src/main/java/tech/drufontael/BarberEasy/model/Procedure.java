@@ -5,11 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.util.UUID;
+
 @Entity(name = "tb_procedure")
 public class Procedure {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     private String description;
     private Integer durationMinutes;
@@ -17,18 +19,18 @@ public class Procedure {
     public Procedure() {
     }
 
-    public Procedure(Long id, String name, String description, Integer durationMinutes) {
+    public Procedure(UUID id, String name, String description, Integer durationMinutes) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.durationMinutes = durationMinutes;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

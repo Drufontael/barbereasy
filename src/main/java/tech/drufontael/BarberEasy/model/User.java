@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 import tech.drufontael.BarberEasy.util.Util;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "tb_user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type",discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String username;
     private String email;
     private String password;
@@ -19,7 +20,7 @@ public abstract class User {
     public User() {
     }
 
-    public User(Long id, String name, String email, String password) {
+    public User(UUID id, String name, String email, String password) {
         this.id = id;
         this.username = name;
         if(Util.emailValidator(email)) {
@@ -30,11 +31,11 @@ public abstract class User {
         this.password = password;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

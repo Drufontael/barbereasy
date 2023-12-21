@@ -1,5 +1,6 @@
 package tech.drufontael.BarberEasy.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,26 +35,22 @@ public class BarberService {
         return repository.findAll();
     }
 
-    public Barber findByUsername(String username) {
-        return repository.findByUsername(username).orElseThrow(() ->
-                new IllegalStateException("Valor não encontrado"));
-    }
 
     public void saveAll(List<Barber> barbers) {
         repository.saveAll(barbers);
     }
 
-    public Barber findById(Long idBarber) {
-        return repository.findById(idBarber).orElseThrow(()->new UserException("Barber not found"));
+    public Barber findById(UUID idBarber) {
+        return repository.findById(idBarber).orElseThrow(()->new UserException("Barber not found with id: " + idBarber));
     }
 
-    public boolean verifyAvailability(Long id, LocalDateTime time){
+    public boolean verifyAvailability(UUID id, LocalDateTime time){
         Barber barber=findById(id);
         return barber.getReservations().stream().filter(x->
                 x.getStartTime().isBefore(time)&& x.getEndtime().isAfter(time)).toList().isEmpty();
     }
 
-    public Map<LocalDateTime,Boolean> singleBarberAvailability(Long id, LocalDate date){
+    public Map<LocalDateTime,Boolean> singleBarberAvailability(UUID id, LocalDate date){
         LocalDateTime iterator=date.atTime(8,0);
         Map<LocalDateTime,Boolean> availabilityDay=new HashMap<>();
         for (int i=0;i<20;i++){
@@ -64,18 +61,17 @@ public class BarberService {
         return availabilityDay;
     }
 
-    public Barber update(Long id,BarberDTO obj) {
-        Barber source=obj.toBarber();
+    public Barber update(UUID id,Barber obj) {
         Barber target=findById(id);
-        Util.copyNonNullProperties(source,target);
+        Util.copyNonNullProperties(obj,target);
         repository.save(target);
         return target;
     }
 
-    public Barber addProcedures(Long id, List<Long> idProcedures) {
+    public Barber addProcedures(UUID id, List<UUID> idProcedures) {
         Barber target=findById(id);
         Set<Procedure> procedures=new HashSet<>();
-        for (Long idProcedure:idProcedures){
+        for (UUID idProcedure:idProcedures){
             Procedure procedure=procedureService.findById(idProcedure);
             procedures.add(procedure);
         }
@@ -85,7 +81,7 @@ public class BarberService {
     }
 
     @Transactional
-    public void delete(Long id){
+    public void delete(UUID id){
         Barber barber=findById(id);
         barber.getProcedures().clear();
         repository.save(barber);

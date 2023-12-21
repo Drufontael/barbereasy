@@ -6,12 +6,13 @@ import tech.drufontael.BarberEasy.model.enums.ReservationStatus;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity(name = "tb_reservation")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @ManyToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
@@ -34,7 +35,7 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Long id, Customer customer, Barber barber, LocalDateTime startTime, ReservationStatus status) {
+    public Reservation(UUID id, Customer customer, Barber barber, LocalDateTime startTime, ReservationStatus status) {
         this.id = id;
         this.customer = customer;
         this.barber = barber;
@@ -42,11 +43,11 @@ public class Reservation {
         this.status = status;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
