@@ -101,6 +101,7 @@ public class ReservationService implements DeleteEntityObserver {
             }
         }
         reservation.setEndtime();
+        reservation.setValue();
         return reservation;
     }
 

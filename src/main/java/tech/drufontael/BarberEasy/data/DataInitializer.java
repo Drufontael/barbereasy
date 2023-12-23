@@ -53,7 +53,7 @@ public class DataInitializer implements CommandLineRunner {
 
         // Criar e salvar 5 procedimentos
         for(int i=1; i<=5; i++){
-            Procedure procedure=new Procedure(null,"Corte estilo "+i,i%2==0?"Lindo"+i:"Barbaro"+i,i*10);
+            Procedure procedure=new Procedure(null,"Corte estilo "+i,i%2==0?"Lindo"+i:"Barbaro"+i,i*10,50.0);
             procedureService.save(procedure);
         }
 

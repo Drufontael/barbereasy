@@ -29,6 +29,7 @@ public class Reservation {
     private Set<Procedure> procedures = new HashSet<>();
     private LocalDateTime startTime;
     private LocalDateTime endtime;
+    private Double value;
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
@@ -105,5 +106,12 @@ public class Reservation {
 
     public Integer getDuration(){
         return this.procedures.stream().map(Procedure::getDurationMinutes).reduce((a, b)->a+b).orElse(null);
+    }
+
+    public Double getValue(){
+        return this.value;
+    }
+    public void setValue(){
+        this.value= this.procedures.stream().map(Procedure::getValue).reduce((a, b)->a+b).orElse(null);
     }
 }

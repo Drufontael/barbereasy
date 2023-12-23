@@ -15,15 +15,18 @@ public class Procedure {
     private String name;
     private String description;
     private Integer durationMinutes;
+    private Double value;
+
 
     public Procedure() {
     }
 
-    public Procedure(UUID id, String name, String description, Integer durationMinutes) {
+    public Procedure(UUID id, String name, String description, Integer durationMinutes,double value) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.durationMinutes = durationMinutes;
+        this.value=value;
     }
 
     public UUID getId() {
@@ -56,6 +59,14 @@ public class Procedure {
 
     public void setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
     }
 
     @Override
